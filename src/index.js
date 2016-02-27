@@ -12,6 +12,8 @@ var batch = require('./batch'),
 
 import cache                   from './cache';
 import PromiseRouter           from './PromiseRouter';
+import MongoDatabaseAdapter    from './Adapters/Database/MongoDatabaseAdapter';
+import { DatabaseController }  from './Controllers/Database/DatabaseController';
 import { GridStoreAdapter }    from './Adapters/Files/GridStoreAdapter';
 import { S3Adapter }           from './Adapters/Files/S3Adapter';
 import { FilesController }     from './Controllers/FilesController';
@@ -120,8 +122,15 @@ function ParseServer({
   const pushControllerAdapter = loadAdapter(push, ParsePushAdapter);
   const loggerControllerAdapter = loadAdapter(loggerAdapter, FileLoggerAdapter);
 
-  // We pass the options and the base class for the adatper,
+  // We pass the options and the base class for the adapter,
   // Note that passing an instance would work too
+  const databaseController = new DatabaseController(
+    cache.databaseCache,
+    databaseAdapter || new MongoDatabaseAdapter(),
+    { appId: appId,
+      databaseURI: databaseURI,
+      collectionPrefix: collectionPrefix }
+  );
   const filesController = new FilesController(filesControllerAdapter);
   const pushController = new PushController(pushControllerAdapter);
   const loggerController = new LoggerController(loggerControllerAdapter);
@@ -136,6 +145,7 @@ function ParseServer({
     restAPIKey: restAPIKey,
     fileKey: fileKey,
     facebookAppIds: facebookAppIds,
+    databaseController: databaseController,
     filesController: filesController,
     pushController: pushController,
     loggerController: loggerController,
