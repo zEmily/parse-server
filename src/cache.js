@@ -1,7 +1,12 @@
+/** @flow weak */
+
+import DatabaseCache from './Controllers/Database/DatabaseCache';
+
 export var apps = {};
 export var stats = {};
 export var isLoaded = false;
 export var users = {};
+export var databaseCache: DatabaseCache = new DatabaseCache();
 
 export function getApp(app, callback) {
   if (apps[app]) return callback(true, apps[app]);
@@ -42,4 +47,5 @@ export default {
   getUser,
   setUser,
   clearCache,
+  databaseCache
 };

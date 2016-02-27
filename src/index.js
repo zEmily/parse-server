@@ -95,13 +95,14 @@ function ParseServer({
   // Initialize the node client SDK automatically
   Parse.initialize(appId, javascriptKey || 'unused', masterKey);
   Parse.serverURL = serverURL;
-  
+
   if (databaseAdapter) {
     DatabaseAdapter.setAdapter(databaseAdapter);
   }
 
   if (databaseURI) {
     DatabaseAdapter.setAppDatabaseURI(appId, databaseURI);
+    cache.databaseCache.cacheDatabaseURI(databaseURI, appId);
   }
   
   if (cloud) {
