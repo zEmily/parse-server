@@ -15,6 +15,7 @@ import PromiseRouter           from './PromiseRouter';
 import { GridStoreAdapter }    from './Adapters/Files/GridStoreAdapter';
 import { S3Adapter }           from './Adapters/Files/S3Adapter';
 import { FilesController }     from './Controllers/FilesController';
+import { DatabaseConnectionsManager } from './Database/DatabaseConnectionsManager'
 
 import ParsePushAdapter        from './Adapters/Push/ParsePushAdapter';
 import { PushController }      from './Controllers/PushController';
@@ -103,6 +104,12 @@ function ParseServer({
   if (databaseURI) {
     DatabaseAdapter.setAppDatabaseURI(appId, databaseURI);
   }
+
+  DatabaseConnectionsManager.instance().addDatabaseConfig(appId, {
+    adapter: MongoDatabaseAdapter,
+    uri: databaseURI,
+    collectionPrefix: collectionPrefix
+  });
   
   if (cloud) {
     addParseCloud();

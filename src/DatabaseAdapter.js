@@ -1,19 +1,24 @@
-/** @flow weak */
-// Database Adapter
-//
-// Allows you to change the underlying database.
-//
-// Adapter classes must implement the following methods:
-// * a constructor with signature (connectionString, optionsObject)
-// * connect()
-// * loadSchema()
-// * create(className, object)
-// * find(className, query, options)
-// * update(className, query, update, options)
-// * destroy(className, query, options)
-// * This list is incomplete and the database process is not fully modularized.
-//
-// Default is ExportAdapter, which uses mongo.
+/**
+ Database Adapter
+
+ Allows you to change the underlying database.
+
+ Adapter classes must implement the following methods:
+ * a constructor with signature (connectionString, optionsObject)
+ * connect()
+ * loadSchema()
+ * create(className, object)
+ * find(className, query, options)
+ * update(className, query, update, options)
+ * destroy(className, query, options)
+ * This list is incomplete and the database process is not fully modularized.
+
+ Default is ExportAdapter, which uses mongo.
+
+ @flow weak
+ */
+
+import { DatabaseConnectionsManager } from './Database/DatabaseConnectionsManager';
 
 var ExportAdapter = require('./ExportAdapter');
 
@@ -38,6 +43,7 @@ function setAppDatabaseURI(appId, uri) {
 function clearDatabaseURIs() {
   appDatabaseURIs = {};
   dbConnections = {};
+  DatabaseConnectionsManager.instance().clearConfigCache();
 }
 
 function getDatabaseConnection(appId: string, collectionPrefix: string) {
